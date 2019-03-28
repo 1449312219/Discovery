@@ -56,6 +56,14 @@ public class PluginEventWapper {
         }
     }
 
+    public void fireRegionUpdated(RegionUpdatedEvent regionUpdatedEvent, boolean async) {
+        if (async) {
+            pluginPublisher.asyncPublish(regionUpdatedEvent);
+        } else {
+            pluginSubscriber.onRegionUpdated(regionUpdatedEvent);
+        }
+    }
+
     public void fireRegisterFailure(RegisterFailureEvent registerFailureEvent) {
         pluginPublisher.asyncPublish(registerFailureEvent);
     }

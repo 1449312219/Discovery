@@ -51,6 +51,8 @@ public interface PluginAdapter {
 
     String getRegion();
 
+    void setRegion(String region);
+
     Map<String, String> getServerMetadata(Server server);
 
     String getServerVersion(Server server);
