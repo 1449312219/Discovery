@@ -18,10 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.common.util.JsonUtil;
 import com.nepxion.discovery.common.util.StringUtil;
-import com.nepxion.discovery.plugin.strategy.constant.RegionConstant;
 import com.netflix.loadbalancer.Server;
 
-public abstract class AbstractDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter, RegionAdapter {
+public abstract class RegionAdapterImpl implements DiscoveryEnabledAdapter {
     @Autowired(required = false)
     private DiscoveryEnabledStrategy discoveryEnabledStrategy;
 
@@ -80,13 +79,13 @@ public abstract class AbstractDiscoveryEnabledAdapter implements DiscoveryEnable
 
     @SuppressWarnings("unchecked")
     private boolean applyRegion(Server server, Map<String, String> metadata) {
-        String regionValue = getRegion(server);
+        String regionValue = getRegionValue(server);
         if (StringUtils.isEmpty(regionValue)) {
             return true;
         }
 
-        String serverRegion = metadata.get(DiscoveryConstant.REGION);
-        if (StringUtils.isEmpty(serverRegion)) {
+        String region = metadata.get(DiscoveryConstant.REGION);
+        if (StringUtils.isEmpty(region)) {
             return false;
         }
 
@@ -103,11 +102,9 @@ public abstract class AbstractDiscoveryEnabledAdapter implements DiscoveryEnable
             return true;
         }
 
-        List<String> expectedRegionList = StringUtil.splitToList(regions, DiscoveryConstant.SEPARATE);
-        for (String expectedRegion : expectedRegionList) {
-            if (expectedRegion.equalsIgnoreCase(serverRegion)) {
-                return true;
-            }
+        List<String> regionList = StringUtil.splitToList(regions, DiscoveryConstant.SEPARATE);
+        if (regionList.contains(region)) {
+            return true;
         }
 
         return false;
@@ -141,12 +138,6 @@ public abstract class AbstractDiscoveryEnabledAdapter implements DiscoveryEnable
         }
 
         return discoveryEnabledStrategy.apply(server, metadata);
-    }
-
-    @Override
-    public String getRegion(Server server) {
-        String region = getRegionValue(server);
-        return StringUtils.isNotEmpty(region) ? region : RegionConstant.PRDT.name();
     }
 
     protected abstract String getVersionValue(Server server);

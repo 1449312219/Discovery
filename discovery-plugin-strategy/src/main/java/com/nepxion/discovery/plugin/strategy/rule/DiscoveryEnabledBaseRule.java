@@ -17,16 +17,17 @@ import com.netflix.loadbalancer.CompositePredicate;
 public class DiscoveryEnabledBaseRule extends PredicateBasedRuleDecorator {
     private CompositePredicate compositePredicate;
     private DiscoveryEnabledBasePredicate discoveryEnabledPredicate;
+    private GrayRegionZoneAvoidancePredicate grayRegionZoneAvoidancePredicate;
 
     public DiscoveryEnabledBaseRule() {
         discoveryEnabledPredicate = new DiscoveryEnabledBasePredicate();
+        grayRegionZoneAvoidancePredicate = new GrayRegionZoneAvoidancePredicate(this, null);
         AvailabilityPredicate availabilityPredicate = new AvailabilityPredicate(this, null);
         compositePredicate = createCompositePredicate(discoveryEnabledPredicate, availabilityPredicate);
     }
 
     private CompositePredicate createCompositePredicate(DiscoveryEnabledBasePredicate discoveryEnabledPredicate, AvailabilityPredicate availabilityPredicate) {
-        return CompositePredicate.withPredicates(discoveryEnabledPredicate, availabilityPredicate)
-                // .addFallbackPredicate(availabilityPredicate)
+        return CompositePredicate.withPredicates(discoveryEnabledPredicate, availabilityPredicate).addFallbackPredicate(grayRegionZoneAvoidancePredicate)
                 // .addFallbackPredicate(AbstractServerPredicate.alwaysTrue())
                 .build();
     }
@@ -38,5 +39,9 @@ public class DiscoveryEnabledBaseRule extends PredicateBasedRuleDecorator {
 
     public DiscoveryEnabledBasePredicate getDiscoveryEnabledPredicate() {
         return discoveryEnabledPredicate;
+    }
+
+    public GrayRegionZoneAvoidancePredicate getGrayRegionZoneAvoidancePredicate() {
+        return grayRegionZoneAvoidancePredicate;
     }
 }
