@@ -18,17 +18,20 @@ import com.netflix.loadbalancer.CompositePredicate;
 public class DiscoveryEnabledZoneAvoidanceRule extends ZoneAvoidanceRuleDecorator {
     private CompositePredicate compositePredicate;
     private DiscoveryEnabledZoneAvoidancePredicate discoveryEnabledPredicate;
+    private GrayRegionZoneAvoidancePredicate grayRegionZoneAvoidancePredicate;
 
     public DiscoveryEnabledZoneAvoidanceRule() {
         super();
         discoveryEnabledPredicate = new DiscoveryEnabledZoneAvoidancePredicate(this, null);
+        grayRegionZoneAvoidancePredicate = new GrayRegionZoneAvoidancePredicate(this, null);
         AvailabilityPredicate availabilityPredicate = new AvailabilityPredicate(this, null);
-        compositePredicate = createCompositePredicate(discoveryEnabledPredicate, availabilityPredicate);
+
+        compositePredicate = createCompositePredicate(discoveryEnabledPredicate, availabilityPredicate, grayRegionZoneAvoidancePredicate);
     }
 
-    private CompositePredicate createCompositePredicate(DiscoveryEnabledZoneAvoidancePredicate discoveryEnabledPredicate, AvailabilityPredicate availabilityPredicate) {
-        return CompositePredicate.withPredicates(discoveryEnabledPredicate, availabilityPredicate)
-                // .addFallbackPredicate(availabilityPredicate)
+    private CompositePredicate createCompositePredicate(DiscoveryEnabledZoneAvoidancePredicate discoveryEnabledPredicate, AvailabilityPredicate availabilityPredicate,
+            GrayRegionZoneAvoidancePredicate grayRegionZoneAvoidancePredicate) {
+        return CompositePredicate.withPredicates(discoveryEnabledPredicate, availabilityPredicate).addFallbackPredicate(grayRegionZoneAvoidancePredicate)
                 // .addFallbackPredicate(AbstractServerPredicate.alwaysTrue())
                 .build();
     }
@@ -36,8 +39,9 @@ public class DiscoveryEnabledZoneAvoidanceRule extends ZoneAvoidanceRuleDecorato
     @Override
     public void initWithNiwsConfig(IClientConfig clientConfig) {
         discoveryEnabledPredicate = new DiscoveryEnabledZoneAvoidancePredicate(this, clientConfig);
+        grayRegionZoneAvoidancePredicate = new GrayRegionZoneAvoidancePredicate(this, null);
         AvailabilityPredicate availabilityPredicate = new AvailabilityPredicate(this, clientConfig);
-        compositePredicate = createCompositePredicate(discoveryEnabledPredicate, availabilityPredicate);
+        compositePredicate = createCompositePredicate(discoveryEnabledPredicate, availabilityPredicate, grayRegionZoneAvoidancePredicate);
     }
 
     @Override
@@ -48,4 +52,9 @@ public class DiscoveryEnabledZoneAvoidanceRule extends ZoneAvoidanceRuleDecorato
     public DiscoveryEnabledZoneAvoidancePredicate getDiscoveryEnabledPredicate() {
         return discoveryEnabledPredicate;
     }
+
+    public GrayRegionZoneAvoidancePredicate getGrayRegionZoneAvoidancePredicate() {
+        return grayRegionZoneAvoidancePredicate;
+    }
+
 }

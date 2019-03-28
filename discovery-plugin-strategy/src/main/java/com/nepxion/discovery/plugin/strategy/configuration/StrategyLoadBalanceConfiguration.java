@@ -20,11 +20,13 @@ import org.springframework.core.env.ConfigurableEnvironment;
 
 import com.nepxion.discovery.plugin.framework.adapter.PluginAdapter;
 import com.nepxion.discovery.plugin.strategy.adapter.DiscoveryEnabledAdapter;
+import com.nepxion.discovery.plugin.strategy.adapter.RegionAdapter;
 import com.nepxion.discovery.plugin.strategy.constant.StrategyConstant;
 import com.nepxion.discovery.plugin.strategy.rule.DiscoveryEnabledBasePredicate;
 import com.nepxion.discovery.plugin.strategy.rule.DiscoveryEnabledBaseRule;
 import com.nepxion.discovery.plugin.strategy.rule.DiscoveryEnabledZoneAvoidancePredicate;
 import com.nepxion.discovery.plugin.strategy.rule.DiscoveryEnabledZoneAvoidanceRule;
+import com.nepxion.discovery.plugin.strategy.rule.GrayRegionZoneAvoidancePredicate;
 import com.netflix.client.config.IClientConfig;
 import com.netflix.loadbalancer.IRule;
 
@@ -46,6 +48,9 @@ public class StrategyLoadBalanceConfiguration {
     @Autowired(required = false)
     private DiscoveryEnabledAdapter discoveryEnabledAdapter;
 
+    @Autowired(required = false)
+    private RegionAdapter regionAdapter;
+
     @Bean
     public IRule ribbonRule(IClientConfig config) {
         if (this.propertiesFactory.isSet(IRule.class, serviceId)) {
@@ -61,6 +66,10 @@ public class StrategyLoadBalanceConfiguration {
             discoveryEnabledPredicate.setPluginAdapter(pluginAdapter);
             discoveryEnabledPredicate.setDiscoveryEnabledAdapter(discoveryEnabledAdapter);
 
+            GrayRegionZoneAvoidancePredicate grayRegionZoneAvoidancePredicate = discoveryEnabledRule.getGrayRegionZoneAvoidancePredicate();
+            grayRegionZoneAvoidancePredicate.setPluginAdapter(pluginAdapter);
+            grayRegionZoneAvoidancePredicate.setRegionAdapter(regionAdapter);
+
             return discoveryEnabledRule;
         } else {
             DiscoveryEnabledBaseRule discoveryEnabledRule = new DiscoveryEnabledBaseRule();
@@ -68,6 +77,10 @@ public class StrategyLoadBalanceConfiguration {
             DiscoveryEnabledBasePredicate discoveryEnabledPredicate = discoveryEnabledRule.getDiscoveryEnabledPredicate();
             discoveryEnabledPredicate.setPluginAdapter(pluginAdapter);
             discoveryEnabledPredicate.setDiscoveryEnabledAdapter(discoveryEnabledAdapter);
+
+            GrayRegionZoneAvoidancePredicate grayRegionZoneAvoidancePredicate = discoveryEnabledRule.getGrayRegionZoneAvoidancePredicate();
+            grayRegionZoneAvoidancePredicate.setPluginAdapter(pluginAdapter);
+            grayRegionZoneAvoidancePredicate.setRegionAdapter(regionAdapter);
 
             return discoveryEnabledRule;
         }
