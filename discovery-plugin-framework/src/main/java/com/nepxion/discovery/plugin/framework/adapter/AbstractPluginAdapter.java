@@ -148,6 +148,11 @@ public abstract class AbstractPluginAdapter implements PluginAdapter {
     }
 
     @Override
+    public void setRegion(String region) {
+        getMetadata().put(DiscoveryConstant.REGION, region);
+    }
+
+    @Override
     public String getServerVersion(Server server) {
         return getServerMetadata(server).get(DiscoveryConstant.VERSION);
     }

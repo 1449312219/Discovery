@@ -12,6 +12,7 @@ package com.nepxion.discovery.plugin.framework.configuration;
 import org.springframework.cloud.netflix.ribbon.RibbonClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.plugin.framework.adapter.EurekaAdapter;
@@ -41,5 +42,10 @@ public class EurekaAutoConfiguration {
     @Bean
     public PluginAdapter pluginAdapter() {
         return new EurekaAdapter();
+    }
+
+    @Bean
+    public RestTemplate metadataUpdateRestTemplate() {
+        return new RestTemplate();
     }
 }

@@ -168,6 +168,28 @@ public class PluginSubscriber {
         }
     }
 
+    @Subscribe
+    public void onRegionUpdated(RegionUpdatedEvent regionUpdatedEvent) {
+        Boolean discoveryControlEnabled = pluginContextAware.isDiscoveryControlEnabled();
+        if (!discoveryControlEnabled) {
+            LOG.info("Discovery control is disabled, ignore to subscribe");
+
+            return;
+        }
+
+        LOG.info("Region updating has been triggered");
+
+        if (regionUpdatedEvent == null) {
+            throw new DiscoveryException("regionUpdatedEvent can't be null");
+        }
+
+        pluginAdapter.setRegion(regionUpdatedEvent.getRegion());
+
+        refreshLoadBalancer();
+
+        LOG.info("Region has been updated, new region is {}", regionUpdatedEvent.getRegion());
+    }
+
     private void refreshLoadBalancer() {
         ZoneAwareLoadBalancer<?> loadBalancer = loadBalanceListenerExecutor.getLoadBalancer();
         if (loadBalancer == null) {
