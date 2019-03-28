@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.web.client.RestTemplate;
 
 import com.nepxion.discovery.plugin.admincenter.endpoint.ConfigEndpoint;
+import com.nepxion.discovery.plugin.admincenter.endpoint.RegionEndpoint;
 import com.nepxion.discovery.plugin.admincenter.endpoint.RouterEndpoint;
 import com.nepxion.discovery.plugin.admincenter.endpoint.VersionEndpoint;
 
@@ -38,6 +39,11 @@ public class AdminAutoConfiguration {
         @Bean
         public RouterEndpoint routerEndpoint() {
             return new RouterEndpoint();
+        }
+
+        @Bean
+        public RegionEndpoint regionEndpoint() {
+            return new RegionEndpoint();
         }
 
         @Bean
