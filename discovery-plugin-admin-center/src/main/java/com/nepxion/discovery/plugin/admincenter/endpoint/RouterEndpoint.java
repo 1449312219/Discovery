@@ -22,7 +22,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.jmx.export.annotation.ManagedOperation;
@@ -53,7 +52,6 @@ import com.nepxion.discovery.plugin.framework.adapter.PluginAdapter;
 @RestController
 @RequestMapping(path = "/router")
 @Api(tags = { "路由接口" })
-@RestControllerEndpoint(id = "router")
 @ManagedResource(description = "Router Endpoint")
 public class RouterEndpoint {
     @Autowired

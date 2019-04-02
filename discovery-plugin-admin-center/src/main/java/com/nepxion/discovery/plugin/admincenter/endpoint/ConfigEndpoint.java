@@ -19,7 +19,6 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jmx.export.annotation.ManagedOperation;
@@ -41,7 +40,6 @@ import com.nepxion.discovery.plugin.framework.event.RuleUpdatedEvent;
 @RestController
 @RequestMapping(path = "/config")
 @Api(tags = { "配置接口" })
-@RestControllerEndpoint(id = "config")
 @ManagedResource(description = "Config Endpoint")
 public class ConfigEndpoint {
     @Autowired

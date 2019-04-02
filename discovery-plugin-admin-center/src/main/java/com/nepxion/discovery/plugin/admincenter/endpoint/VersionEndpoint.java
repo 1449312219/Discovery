@@ -9,16 +9,11 @@ package com.nepxion.discovery.plugin.admincenter.endpoint;
  * @version 1.0
  */
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jmx.export.annotation.ManagedOperation;
@@ -36,10 +31,13 @@ import com.nepxion.discovery.plugin.framework.event.PluginEventWapper;
 import com.nepxion.discovery.plugin.framework.event.VersionClearedEvent;
 import com.nepxion.discovery.plugin.framework.event.VersionUpdatedEvent;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
 @RestController
 @RequestMapping(path = "/version")
 @Api(tags = { "版本接口" })
-@RestControllerEndpoint(id = "version")
 @ManagedResource(description = "Version Endpoint")
 public class VersionEndpoint {
     @Autowired

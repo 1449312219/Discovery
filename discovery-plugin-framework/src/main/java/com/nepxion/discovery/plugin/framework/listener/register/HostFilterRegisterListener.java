@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.serviceregistry.Registration;
 
 import com.nepxion.discovery.common.entity.FilterType;
@@ -21,14 +22,18 @@ import com.nepxion.discovery.common.entity.HostFilterEntity;
 import com.nepxion.discovery.common.entity.RegisterEntity;
 import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.common.exception.DiscoveryException;
+import com.nepxion.discovery.plugin.framework.decorator.DiscoveryClientDecorator;
 import com.nepxion.discovery.plugin.framework.event.RegisterFailureEvent;
 
 public class HostFilterRegisterListener extends AbstractRegisterListener {
+    @Autowired
+    private DiscoveryClientDecorator discoveryClient;
+
     @Override
     public void onRegister(Registration registration) {
         String serviceId = registration.getServiceId().toLowerCase();
-        String host = registration.getHost();
-        int port = registration.getPort();
+        String host = discoveryClient.getLocalServiceInstance().getHost();
+        int port = discoveryClient.getLocalServiceInstance().getPort();
 
         applyHostFilter(serviceId, host, port);
     }

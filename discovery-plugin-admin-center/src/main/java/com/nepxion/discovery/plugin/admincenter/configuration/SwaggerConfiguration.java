@@ -28,7 +28,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
@@ -38,7 +38,7 @@ import com.google.common.base.Predicate;
 @EnableSwagger2
 @ConditionalOnClass(name = { "javax.servlet.ServletContext" }) // 适配Spring Cloud Api Gateway，不装载Swagger
 @ConditionalOnProperty(value = "swagger.service.enabled", matchIfMissing = true)
-public class SwaggerConfiguration implements WebMvcConfigurer {
+public class SwaggerConfiguration extends WebMvcConfigurerAdapter {
     public static final String BASE_PACKAGE = "com.nepxion.discovery.plugin.admincenter.endpoint";
 
     @Value("${spring.application.name}")

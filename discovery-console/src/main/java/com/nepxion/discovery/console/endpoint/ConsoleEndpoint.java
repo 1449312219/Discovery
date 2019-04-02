@@ -23,10 +23,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.cloud.client.discovery.composite.CompositeDiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jmx.export.annotation.ManagedOperation;
@@ -53,7 +51,6 @@ import com.nepxion.discovery.console.rest.VersionUpdateRestInvoker;
 @RestController
 @RequestMapping(path = "/console")
 @Api(tags = { "控制台接口" })
-@RestControllerEndpoint(id = "console")
 @ManagedResource(description = "Console Endpoint")
 public class ConsoleEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(ConsoleEndpoint.class);
@@ -235,25 +232,11 @@ public class ConsoleEndpoint {
     }
 
     private ResponseEntity<?> getDiscoveryType() {
-        if (discoveryClient instanceof CompositeDiscoveryClient) {
-            CompositeDiscoveryClient compositeDiscoveryClient = (CompositeDiscoveryClient) discoveryClient;
-            List<DiscoveryClient> discoveryClients = compositeDiscoveryClient.getDiscoveryClients();
-            for (DiscoveryClient client : discoveryClients) {
-                String discoveryDescription = client.description();
-                for (int i = 0; i < DISCOVERY_TYPES.length; i++) {
-                    String discoveryType = DISCOVERY_TYPES[i];
-                    if (discoveryDescription.toLowerCase().contains(discoveryType.toLowerCase())) {
-                        return ResponseEntity.ok().body(discoveryType);
-                    }
-                }
-            }
-        } else {
-            String discoveryDescription = discoveryClient.description();
-            for (int i = 0; i < DISCOVERY_TYPES.length; i++) {
-                String discoveryType = DISCOVERY_TYPES[i];
-                if (discoveryDescription.toLowerCase().contains(discoveryType.toLowerCase())) {
-                    return ResponseEntity.ok().body(discoveryType);
-                }
+        String discoveryDescription = discoveryClient.description();
+        for (int i = 0; i < DISCOVERY_TYPES.length; i++) {
+            String discoveryType = DISCOVERY_TYPES[i];
+            if (discoveryDescription.toLowerCase().contains(discoveryType.toLowerCase())) {
+                return ResponseEntity.ok().body(discoveryType);
             }
         }
 

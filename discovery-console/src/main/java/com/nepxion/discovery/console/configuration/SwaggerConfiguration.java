@@ -27,7 +27,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
@@ -36,7 +36,7 @@ import com.google.common.base.Predicate;
 @Configuration
 @EnableSwagger2
 @ConditionalOnProperty(value = "swagger.service.enabled", matchIfMissing = true)
-public class SwaggerConfiguration implements WebMvcConfigurer {
+public class SwaggerConfiguration extends WebMvcConfigurerAdapter {
     public static final String BASE_PACKAGE = "com.nepxion.discovery.console.endpoint";
 
     @Value("${spring.application.name}")

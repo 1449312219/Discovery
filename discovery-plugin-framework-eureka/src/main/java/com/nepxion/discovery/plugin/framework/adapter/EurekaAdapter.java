@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.netflix.eureka.EurekaClientConfigBean;
 import org.springframework.cloud.netflix.eureka.EurekaInstanceConfigBean;
 import org.springframework.web.client.RestTemplate;
@@ -36,6 +37,9 @@ public class EurekaAdapter extends AbstractPluginAdapter {
 
     @Autowired
     private EurekaClientConfigBean clientConfig;
+
+    @Autowired
+    private DiscoveryClient client;
 
     @Autowired
     @Qualifier("metadataUpdateRestTemplate")
@@ -64,5 +68,23 @@ public class EurekaAdapter extends AbstractPluginAdapter {
         }
 
         throw new DiscoveryException("Server instance isn't the type of DiscoveryEnabledServer");
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public String getHost() {
+        return client.getLocalServiceInstance().getHost();
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public int getPort() {
+        return client.getLocalServiceInstance().getPort();
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public Map<String, String> getMetadata() {
+        return client.getLocalServiceInstance().getMetadata();
     }
 }

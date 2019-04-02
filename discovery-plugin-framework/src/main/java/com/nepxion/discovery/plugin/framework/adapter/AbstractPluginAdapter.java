@@ -9,8 +9,6 @@ package com.nepxion.discovery.plugin.framework.adapter;
  * @version 1.0
  */
 
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.serviceregistry.Registration;
@@ -58,23 +56,8 @@ public abstract class AbstractPluginAdapter implements PluginAdapter {
     }
 
     @Override
-    public String getHost() {
-        return registration.getHost();
-    }
-
-    @Override
-    public int getPort() {
-        return registration.getPort();
-    }
-
-    @Override
     public String getContextPath() {
         return getMetadata().get(DiscoveryConstant.SPRING_APPLICATION_CONTEXT_PATH);
-    }
-
-    @Override
-    public Map<String, String> getMetadata() {
-        return registration.getMetadata();
     }
 
     @Override

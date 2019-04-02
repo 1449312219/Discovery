@@ -1,7 +1,6 @@
 package com.nepxion.discovery.plugin.admincenter.endpoint;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jmx.export.annotation.ManagedOperation;
@@ -25,7 +24,6 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping(path = "/region")
 @Api(tags = { "Region接口" })
-@RestControllerEndpoint(id = "region")
 @ManagedResource(description = "Region Endpoint")
 public class RegionEndpoint {
     @Autowired

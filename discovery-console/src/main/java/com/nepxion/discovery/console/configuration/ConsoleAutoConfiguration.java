@@ -9,8 +9,6 @@ package com.nepxion.discovery.console.configuration;
  * @version 1.0
  */
 
-import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,7 +41,6 @@ public class ConsoleAutoConfiguration {
         }
     }
 
-    @ConditionalOnClass(RestControllerEndpoint.class)
     protected static class ConsoleEndpointConfiguration {
         @Bean
         public ConsoleEndpoint consoleEndpoint() {

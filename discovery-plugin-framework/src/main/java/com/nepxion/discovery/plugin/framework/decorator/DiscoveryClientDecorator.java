@@ -85,4 +85,10 @@ public class DiscoveryClientDecorator implements DiscoveryClient {
     public ConfigurableEnvironment getEnvironment() {
         return environment;
     }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public ServiceInstance getLocalServiceInstance() {
+        return discoveryClient.getLocalServiceInstance();
+    }
 }
