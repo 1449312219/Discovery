@@ -84,8 +84,8 @@ public abstract class AbstractDiscoveryEnabledAdapter implements DiscoveryEnable
             return true;
         }
 
-        String serverRegion = metadata.get(DiscoveryConstant.REGION);
-        if (StringUtils.isEmpty(serverRegion)) {
+        String region = metadata.get(DiscoveryConstant.REGION);
+        if (StringUtils.isEmpty(region)) {
             return false;
         }
 
@@ -102,11 +102,9 @@ public abstract class AbstractDiscoveryEnabledAdapter implements DiscoveryEnable
             return true;
         }
 
-        List<String> expectedRegionList = StringUtil.splitToList(regions, DiscoveryConstant.SEPARATE);
-        for (String expectedRegion : expectedRegionList) {
-            if (expectedRegion.equalsIgnoreCase(serverRegion)) {
-                return true;
-            }
+        List<String> regionList = StringUtil.splitToList(regions, DiscoveryConstant.SEPARATE);
+        if (regionList.contains(region)) {
+            return true;
         }
 
         return false;
