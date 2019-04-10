@@ -41,6 +41,22 @@ public class DefaultDiscoveryEnabledAdapter extends AbstractDiscoveryEnabledAdap
     }
 
     @Override
+    public void setRegionValue(Server server, String region) {
+        HttpServletRequest request = zuulStrategyContextHolder.getRequest();
+        if (request != null) {
+            request.setAttribute(DiscoveryConstant.PRIMARY_REGION, region);
+        }
+    }
+
+    @Override
+    public void revertRegionValue(Server server) {
+        HttpServletRequest request = zuulStrategyContextHolder.getRequest();
+        if (request != null) {
+            request.removeAttribute(DiscoveryConstant.PRIMARY_REGION);
+        }
+    }
+
+    @Override
     protected String getRegionValue(Server server) {
         HttpServletRequest request = zuulStrategyContextHolder.getRequest();
         if (request == null) {
@@ -51,7 +67,22 @@ public class DefaultDiscoveryEnabledAdapter extends AbstractDiscoveryEnabledAdap
             return null;
         }
 
-        return request.getHeader(DiscoveryConstant.REGION);
+        Object primaryRegion = request.getAttribute(DiscoveryConstant.PRIMARY_REGION);
+        if (primaryRegion != null) {
+            return primaryRegion.toString();
+        } else {
+            return request.getHeader(DiscoveryConstant.REGION);
+        }
+    }
+
+    @Override
+    protected String getBackUpRegionsValue(Server server) {
+        HttpServletRequest request = zuulStrategyContextHolder.getRequest();
+        if (request == null) {
+            return null;
+        }
+
+        return request.getHeader(DiscoveryConstant.BACKUP_REGION);
     }
 
     @Override

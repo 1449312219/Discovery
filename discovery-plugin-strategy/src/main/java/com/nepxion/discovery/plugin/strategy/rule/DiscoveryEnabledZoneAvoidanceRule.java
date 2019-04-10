@@ -27,6 +27,7 @@ public class DiscoveryEnabledZoneAvoidanceRule extends ZoneAvoidanceRuleDecorato
         AvailabilityPredicate availabilityPredicate = new AvailabilityPredicate(this, null);
 
         compositePredicate = createCompositePredicate(discoveryEnabledPredicate, availabilityPredicate, grayRegionZoneAvoidancePredicate);
+        grayRegionZoneAvoidancePredicate.setCompositePredicate(compositePredicate);
     }
 
     private CompositePredicate createCompositePredicate(DiscoveryEnabledZoneAvoidancePredicate discoveryEnabledPredicate, AvailabilityPredicate availabilityPredicate,
@@ -42,6 +43,7 @@ public class DiscoveryEnabledZoneAvoidanceRule extends ZoneAvoidanceRuleDecorato
         grayRegionZoneAvoidancePredicate = new GrayRegionZoneAvoidancePredicate(this, null);
         AvailabilityPredicate availabilityPredicate = new AvailabilityPredicate(this, clientConfig);
         compositePredicate = createCompositePredicate(discoveryEnabledPredicate, availabilityPredicate, grayRegionZoneAvoidancePredicate);
+        grayRegionZoneAvoidancePredicate.setCompositePredicate(compositePredicate);
     }
 
     @Override

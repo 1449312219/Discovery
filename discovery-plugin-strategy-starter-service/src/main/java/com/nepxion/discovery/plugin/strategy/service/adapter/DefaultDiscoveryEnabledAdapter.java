@@ -1,5 +1,6 @@
 package com.nepxion.discovery.plugin.strategy.service.adapter;
 
+
 /**
  * <p>Title: Nepxion Discovery</p>
  * <p>Description: Nepxion Discovery</p>
@@ -8,6 +9,8 @@ package com.nepxion.discovery.plugin.strategy.service.adapter;
  * @author Haojun Ren
  * @version 1.0
  */
+ 
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +43,22 @@ public class DefaultDiscoveryEnabledAdapter extends AbstractDiscoveryEnabledAdap
     }
 
     @Override
+    public void setRegionValue(Server server, String region) {
+        ServletRequestAttributes attributes = serviceStrategyContextHolder.getRestAttributes();
+        if (attributes != null) {
+            attributes.getRequest().setAttribute(DiscoveryConstant.PRIMARY_REGION, region);
+        }
+    }
+
+    @Override
+    public void revertRegionValue(Server server) {
+        ServletRequestAttributes attributes = serviceStrategyContextHolder.getRestAttributes();
+        if (attributes != null) {
+            attributes.getRequest().removeAttribute(DiscoveryConstant.PRIMARY_REGION);
+        }
+    }
+
+    @Override
     protected String getRegionValue(Server server) {
         ServletRequestAttributes attributes = serviceStrategyContextHolder.getRestAttributes();
         if (attributes == null) {
@@ -50,7 +69,23 @@ public class DefaultDiscoveryEnabledAdapter extends AbstractDiscoveryEnabledAdap
             return null;
         }
 
-        return attributes.getRequest().getHeader(DiscoveryConstant.REGION);
+        HttpServletRequest request = attributes.getRequest();
+        Object primrayRegion = request.getAttribute(DiscoveryConstant.PRIMARY_REGION);
+        if (primrayRegion != null) {
+            return primrayRegion.toString();
+        } else {
+            return attributes.getRequest().getHeader(DiscoveryConstant.REGION);
+        }
+    }
+
+    @Override
+    protected String getBackUpRegionsValue(Server server) {
+        ServletRequestAttributes attributes = serviceStrategyContextHolder.getRestAttributes();
+        if (attributes == null) {
+            return null;
+        }
+
+        return attributes.getRequest().getHeader(DiscoveryConstant.BACKUP_REGION);
     }
 
     @Override

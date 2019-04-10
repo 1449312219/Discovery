@@ -2,8 +2,12 @@ package com.nepxion.discovery.plugin.strategy.adapter;
 
 import com.netflix.loadbalancer.Server;
 
-public interface RegionAdapter {
+interface RegionTempChangable {
+    void setRegionValue(Server server, String region);
 
-    String getRegion(Server server);
+    void revertRegionValue(Server server);
+}
 
+public interface RegionAdapter extends RegionTempChangable {
+    String[] getAllBackUpRegions(Server server);
 }

@@ -67,7 +67,6 @@ public class StrategyLoadBalanceConfiguration {
             discoveryEnabledPredicate.setDiscoveryEnabledAdapter(discoveryEnabledAdapter);
 
             GrayRegionZoneAvoidancePredicate grayRegionZoneAvoidancePredicate = discoveryEnabledRule.getGrayRegionZoneAvoidancePredicate();
-            grayRegionZoneAvoidancePredicate.setPluginAdapter(pluginAdapter);
             grayRegionZoneAvoidancePredicate.setRegionAdapter(regionAdapter);
 
             return discoveryEnabledRule;
@@ -79,7 +78,6 @@ public class StrategyLoadBalanceConfiguration {
             discoveryEnabledPredicate.setDiscoveryEnabledAdapter(discoveryEnabledAdapter);
 
             GrayRegionZoneAvoidancePredicate grayRegionZoneAvoidancePredicate = discoveryEnabledRule.getGrayRegionZoneAvoidancePredicate();
-            grayRegionZoneAvoidancePredicate.setPluginAdapter(pluginAdapter);
             grayRegionZoneAvoidancePredicate.setRegionAdapter(regionAdapter);
 
             return discoveryEnabledRule;
