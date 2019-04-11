@@ -40,7 +40,23 @@ public class DefaultDiscoveryEnabledAdapter extends AbstractDiscoveryEnabledAdap
     }
 
     @Override
-    protected String getRegionValue(Server server) {
+    public void setRegionValue(Server server, String region) {
+        ServerWebExchange exchange = gatewayStrategyContextHolder.getExchange();
+        if (exchange != null) {
+            exchange.getAttributes().put(DiscoveryConstant.PRIMARY_REGION, region);
+        }
+    }
+
+    @Override
+    public void revertRegionValue(Server server) {
+        ServerWebExchange exchange = gatewayStrategyContextHolder.getExchange();
+        if (exchange != null) {
+            exchange.getAttributes().remove(DiscoveryConstant.PRIMARY_REGION);
+        }
+    }
+
+    @Override
+    public String getRegionValue(Server server) {
         ServerWebExchange exchange = gatewayStrategyContextHolder.getExchange();
         if (exchange == null) {
             String serviceId = server.getMetaInfo().getAppName().toLowerCase();
@@ -50,7 +66,22 @@ public class DefaultDiscoveryEnabledAdapter extends AbstractDiscoveryEnabledAdap
             return null;
         }
 
-        return exchange.getRequest().getHeaders().getFirst(DiscoveryConstant.REGION);
+        String primrayRegion = exchange.getAttribute(DiscoveryConstant.PRIMARY_REGION);
+        if (primrayRegion != null) {
+            return primrayRegion;
+        } else {
+            return exchange.getRequest().getHeaders().getFirst(DiscoveryConstant.REGION);
+        }
+    }
+
+    @Override
+    protected String getBackUpRegionsValue(Server server) {
+        ServerWebExchange exchange = gatewayStrategyContextHolder.getExchange();
+        if (exchange == null) {
+            return null;
+        }
+
+        return exchange.getRequest().getHeaders().getFirst(DiscoveryConstant.BACKUP_REGION);
     }
 
     @Override
