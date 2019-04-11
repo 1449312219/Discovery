@@ -28,13 +28,14 @@ public class GrayRegionZoneAvoidancePredicate extends ZoneAvoidancePredicate {
 
     @Override
     public List<Server> getEligibleServers(List<Server> servers, Object loadBalancerKey) {
-        String[] regions = regionAdapter.getAllBackUpRegions(null);
-        if (ObjectUtils.isEmpty(regions)) {
+        String requestRegion = regionAdapter.getRegionValue(servers.get(0));
+        String[] backupRegions = regionAdapter.getAllBackUpRegions(null);
+        if (ObjectUtils.isEmpty(requestRegion) || ObjectUtils.isEmpty(backupRegions)) {
             return Collections.emptyList();
         }
 
         try {
-            for (String region : regions) {
+            for (String region : backupRegions) {
                 regionAdapter.setRegionValue(null, region);
                 List<Server> selected = super.getEligibleServers(servers, loadBalancerKey);
                 if (!ObjectUtils.isEmpty(selected)) {

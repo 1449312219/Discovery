@@ -9,5 +9,7 @@ interface RegionTempChangable {
 }
 
 public interface RegionAdapter extends RegionTempChangable {
+    String getRegionValue(Server server);
+
     String[] getAllBackUpRegions(Server server);
 }

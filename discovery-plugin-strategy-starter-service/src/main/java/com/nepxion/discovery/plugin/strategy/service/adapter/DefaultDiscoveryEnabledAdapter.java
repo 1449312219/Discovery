@@ -59,7 +59,7 @@ public class DefaultDiscoveryEnabledAdapter extends AbstractDiscoveryEnabledAdap
     }
 
     @Override
-    protected String getRegionValue(Server server) {
+    public String getRegionValue(Server server) {
         ServletRequestAttributes attributes = serviceStrategyContextHolder.getRestAttributes();
         if (attributes == null) {
             String serviceId = server.getMetaInfo().getAppName().toLowerCase();
