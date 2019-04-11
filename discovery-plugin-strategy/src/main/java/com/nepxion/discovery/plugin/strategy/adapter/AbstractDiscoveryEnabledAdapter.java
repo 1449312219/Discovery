@@ -143,7 +143,7 @@ public abstract class AbstractDiscoveryEnabledAdapter implements DiscoveryEnable
     @Override
     public String[] getAllBackUpRegions(Server server) {
         String backRegions = getBackUpRegionsValue(server);
-        return backRegions != null ? StringUtils.split(backRegions, ".") : null;
+        return backRegions != null ? StringUtils.split(backRegions, DiscoveryConstant.BACKUP_REGION_SEPARATE) : null;
     }
 
     protected abstract String getVersionValue(Server server);
