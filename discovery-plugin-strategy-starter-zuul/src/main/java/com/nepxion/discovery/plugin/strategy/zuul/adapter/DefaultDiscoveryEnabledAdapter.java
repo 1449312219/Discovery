@@ -57,7 +57,7 @@ public class DefaultDiscoveryEnabledAdapter extends AbstractDiscoveryEnabledAdap
     }
 
     @Override
-    protected String getRegionValue(Server server) {
+    public String getRegionValue(Server server) {
         HttpServletRequest request = zuulStrategyContextHolder.getRequest();
         if (request == null) {
             String serviceId = server.getMetaInfo().getAppName().toLowerCase();

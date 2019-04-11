@@ -148,7 +148,7 @@ public abstract class AbstractDiscoveryEnabledAdapter implements DiscoveryEnable
 
     protected abstract String getVersionValue(Server server);
 
-    protected abstract String getRegionValue(Server server);
+    public abstract String getRegionValue(Server server);
 
     protected abstract String getBackUpRegionsValue(Server server);
 
