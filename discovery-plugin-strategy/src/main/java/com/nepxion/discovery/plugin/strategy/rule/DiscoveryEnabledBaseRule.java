@@ -24,6 +24,7 @@ public class DiscoveryEnabledBaseRule extends PredicateBasedRuleDecorator {
         grayRegionZoneAvoidancePredicate = new GrayRegionZoneAvoidancePredicate(this, null);
         AvailabilityPredicate availabilityPredicate = new AvailabilityPredicate(this, null);
         compositePredicate = createCompositePredicate(discoveryEnabledPredicate, availabilityPredicate);
+        grayRegionZoneAvoidancePredicate.setCompositePredicate(compositePredicate);
     }
 
     private CompositePredicate createCompositePredicate(DiscoveryEnabledBasePredicate discoveryEnabledPredicate, AvailabilityPredicate availabilityPredicate) {

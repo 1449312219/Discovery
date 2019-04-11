@@ -1,12 +1,13 @@
 package com.nepxion.discovery.plugin.strategy.rule;
 
-import org.apache.commons.lang.StringUtils;
+import java.util.Collections;
+import java.util.List;
 
-import com.nepxion.discovery.common.constant.DiscoveryConstant;
-import com.nepxion.discovery.plugin.framework.adapter.PluginAdapter;
+import org.springframework.util.ObjectUtils;
+
 import com.nepxion.discovery.plugin.strategy.adapter.RegionAdapter;
-import com.nepxion.discovery.plugin.strategy.constant.RegionConstant;
 import com.netflix.client.config.IClientConfig;
+import com.netflix.loadbalancer.CompositePredicate;
 import com.netflix.loadbalancer.IRule;
 import com.netflix.loadbalancer.LoadBalancerStats;
 import com.netflix.loadbalancer.PredicateKey;
@@ -14,8 +15,8 @@ import com.netflix.loadbalancer.Server;
 import com.netflix.loadbalancer.ZoneAvoidancePredicate;
 
 public class GrayRegionZoneAvoidancePredicate extends ZoneAvoidancePredicate {
-    private PluginAdapter pluginAdapter;
     private RegionAdapter regionAdapter;
+    private CompositePredicate compositePredicate;
 
     public GrayRegionZoneAvoidancePredicate(IRule rule, IClientConfig clientConfig) {
         super(rule, clientConfig);
@@ -26,40 +27,46 @@ public class GrayRegionZoneAvoidancePredicate extends ZoneAvoidancePredicate {
     }
 
     @Override
+    public List<Server> getEligibleServers(List<Server> servers, Object loadBalancerKey) {
+        String[] regions = regionAdapter.getAllBackUpRegions(null);
+        if (ObjectUtils.isEmpty(regions)) {
+            return Collections.emptyList();
+        }
+
+        try {
+            for (String region : regions) {
+                regionAdapter.setRegionValue(null, region);
+                List<Server> selected = super.getEligibleServers(servers, loadBalancerKey);
+                if (!ObjectUtils.isEmpty(selected)) {
+                    return selected;
+                }
+            }
+            return Collections.emptyList();
+        } finally {
+            regionAdapter.revertRegionValue(null);
+        }
+    }
+
+    @Override
     public boolean apply(PredicateKey input) {
         boolean enabled = super.apply(input);
         if (!enabled) {
             return false;
         }
 
-        return apply(input.getServer());
-    }
-
-    protected boolean apply(Server server) {
         if (regionAdapter == null) {
             return true;
         }
 
-        String requestRegion = regionAdapter.getRegion(server);
-
-        if (isEquals(requestRegion, RegionConstant.GRAY)) {
-            String serverRegion = pluginAdapter.getServerMetadata(server).get(DiscoveryConstant.REGION);
-            return isEquals(serverRegion, RegionConstant.PRDT);
-        }
-
-        return false;
-    }
-
-    private boolean isEquals(String actualRegion, RegionConstant expectedRegion) {
-        return StringUtils.isNotEmpty(actualRegion) && expectedRegion.name().equalsIgnoreCase(actualRegion);
-    }
-
-    public void setPluginAdapter(PluginAdapter pluginAdapter) {
-        this.pluginAdapter = pluginAdapter;
+        return compositePredicate.apply(input);
     }
 
     public void setRegionAdapter(RegionAdapter regionAdapter) {
         this.regionAdapter = regionAdapter;
+    }
+
+    public void setCompositePredicate(CompositePredicate compositePredicate) {
+        this.compositePredicate = compositePredicate;
     }
 
 }
